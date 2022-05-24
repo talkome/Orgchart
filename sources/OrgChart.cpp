@@ -58,7 +58,8 @@ Node* OrgChart::find_node(string const &item) const{
 
 void OrgChart::set_traversal() {
     size_t i = 0;
-    while (i < traversal.size()-1){
+    size_t size = traversal.size();
+    while (i < size-1){
         Node* back = nullptr;
         Node* curr = nullptr;
         back = traversal[i];
@@ -101,8 +102,8 @@ void OrgChart::scan_reverse_order(Node* node) {
 
 void OrgChart::scan_preorder(Node* node){
     traversal.push_back(node);
-    for(size_t i=0; i < node->sons.size();i++){
-        scan_preorder(node->sons[i]);
+    for(auto & son : node->sons){
+        scan_preorder(son);
     }
 }
 
