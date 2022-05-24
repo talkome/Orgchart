@@ -3,9 +3,11 @@
  */
 
 #pragma once
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <vector>
 #include <string>
-#include <queue>
 #include <deque>
 #include <algorithm>
 #include <iterator>
@@ -104,7 +106,7 @@ namespace ariel {
         void scan_preorder(Node* node);
 
         // Print Operator
-        friend ostream& operator<<(ostream& out, OrgChart& oc);
+        friend std::ostream& operator<<(std::ostream& out, OrgChart& oc);
 
         void clear();
 

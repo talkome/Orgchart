@@ -107,7 +107,7 @@ void OrgChart::scan_preorder(Node* node){
 }
 
 // Print Operator
-ostream& operator<<(ostream &out, OrgChart &oc){
+std::ostream& ariel::operator<<(std::ostream &out, ariel::OrgChart &oc){
     for (const auto& element : oc) {
         out << element << " " ;
     }
