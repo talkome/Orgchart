@@ -41,6 +41,7 @@ OrgChart& OrgChart::add_sub(string const &boss_name, string const &sub_name){
 Node* OrgChart::find_node(string const &item) const{
     deque<Node*> queue;
     Node* curr = nullptr;
+
     queue.push_back(this->root);
     while(!queue.empty()){
         curr = queue.front();
