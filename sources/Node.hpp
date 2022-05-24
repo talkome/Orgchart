@@ -18,7 +18,7 @@ struct Node {
 
     Node(Node& other): name(other.name), next(nullptr){}
 
-    Node(Node&& other) noexcept: name(other.name), next(nullptr){}
+    Node(Node&& other) noexcept: name(move(other.name)), next(nullptr){}
 
     // Destructor
     ~Node(){}
