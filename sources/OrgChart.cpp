@@ -13,6 +13,9 @@ OrgChart& OrgChart::add_root(string const &item){
     if (item.empty()){
         throw invalid_argument("Invalid Name");
     }
+    if (!traversal.empty()){
+        clear();
+    }
     if (nullptr == root) {
         this->root = new Node(item);
     } else {
@@ -41,7 +44,6 @@ OrgChart& OrgChart::add_sub(string const &boss_name, string const &sub_name){
 Node* OrgChart::find_node(string const &item) const{
     deque<Node*> queue;
     Node* curr = nullptr;
-
     queue.push_back(this->root);
     while(!queue.empty()){
         curr = queue.front();
