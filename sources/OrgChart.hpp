@@ -63,184 +63,68 @@ namespace ariel {
         // Constructor
         OrgChart(): root(nullptr), orig_root(nullptr){}
 
+        OrgChart(OrgChart& other): root(other.root), orig_root(other.root){}
+
+        OrgChart(OrgChart&& other) noexcept: root(other.root), orig_root(other.root){}
+
         // Destructor
         ~OrgChart()= default;
 
-        // addition
-        OrgChart& add_root(string const &item){
-            if (item.empty()){
-                throw invalid_argument("Invalid Name");
+        OrgChart& operator=(OrgChart other){
+            if (this != &other){
+                this->root = other.root;
+                this->orig_root = other.orig_root;
             }
-            if (nullptr != root) {
-                Node *new_head = new Node(item);
-                new_head->sons.push_back(root);
-                root = new_head;
-            } else {
-                this->root = new Node(item);
-            }
-            this->orig_root = root;
             return *this;
         }
 
-        OrgChart& add_sub(string const &boss_name, string const &sub_name){
-            if (boss_name.empty() || sub_name.empty()){
-                throw invalid_argument("Invalid Name");
+        OrgChart& operator=(OrgChart&& other) noexcept{
+            if (this != &other){
+                this->root = other.root;
+                this->orig_root = other.orig_root;
             }
-            Node* boss = find_node(boss_name);
-            Node *sub = new Node(sub_name);
-            boss->sons.push_back(sub);
             return *this;
         }
+
+        // addition
+        OrgChart& add_root(string const &item);
+
+        OrgChart& add_sub(string const &boss_name, string const &sub_name);
 
         // searching using bfs algorithm
-        Node* find_node(string const &item) const{
-            deque<Node*> queue;
-            queue.push_back(this->root);
-            while(!queue.empty()){
-                Node* curr = queue.front();
-                if (curr->name != item) {
-                    for (auto &son: curr->sons) {
-                        queue.push_back(son);
-                    }
-                    queue.pop_front();
-                } else {
-                    return curr;
-                }
-            }
-            throw invalid_argument("this item is not in the graph");
-        }
+        Node* find_node(string const &item) const;
 
-        void set_traversal() {
-            size_t i = 0;
-            while (i < traversal.size()-1){
-                Node* back = traversal[i];
-                Node* curr = traversal[i+1];
-                back->next = curr;
-                curr->next = nullptr;
-                i++;
-            }
-            this->root = traversal[0];
-        }
+        void set_traversal();
 
         // Tree Scanner
-        void scan_level_order(){
-            deque<Node*> queue;
-            queue.push_front(this->root);
-            while(!queue.empty()){
-                Node* curr = queue.front();
-                traversal.push_back(curr);
-                for (auto &son: curr->sons) {
-                    queue.push_back(son);
-                }
-                queue.pop_front();
-            }
-        }
+        void scan_level_order();
 
-        void scan_reverse_order(Node* node) {
-            deque<Node*> stack;
-            stack.push_back(node);
-            while(!stack.empty()){
-                Node* curr = stack.front();
-                traversal.push_back(curr);
-                stack.pop_front();
-                for (size_t i = curr->sons.size()+1; i > 1; i--) {
-                    stack.push_back(curr->sons[i-2]);
-                }
-            }
-        }
+        void scan_reverse_order(Node* node);
 
-        void scan_preorder(Node* node){
-            traversal.push_back(node);
-            for(size_t i=0; i < node->sons.size();i++){
-                scan_preorder(node->sons[i]);
-            }
-        }
+        void scan_preorder(Node* node);
 
         // Print Operator
-        friend ostream& operator<<(ostream &out, OrgChart &oc){
-            for (const auto& element : oc) {
-                out << element << " " ;
-            }
-            return out;
-        }
+        friend ostream& operator<<(ostream& out, OrgChart& oc);
 
-        void clear() {
-            this->root = orig_root;
-            if (!traversal.empty()){
-                for (auto & i : traversal) {
-                    i->next = nullptr;
-                }
-                traversal.clear();
-            }
-        }
+        void clear();
 
         // Method
-        iterator begin_level_order() {
-            if (nullptr == root){
-                throw invalid_argument("This Tree is Empty");
-            }
-            clear();
-            scan_level_order();
-            set_traversal();
-            return {root};
-        }
+        iterator begin_level_order();
 
-        iterator end_level_order() const{
-            if (nullptr == root){
-                throw invalid_argument("This Tree is Empty");
-            }
-            return {nullptr};
-        }
+        iterator end_level_order() const;
 
-        iterator begin_reverse_order() {
-            if (nullptr == root){
-                throw invalid_argument("This Tree is Empty");
-            }
-            clear();
-            scan_reverse_order(root);
-            std::reverse(traversal.begin(),traversal.end());
-            set_traversal();
-            return {root};
-        }
+        iterator begin_reverse_order();
 
-        iterator reverse_order() const{
-            if (nullptr == root){
-                throw invalid_argument("This Tree is Empty");
-            }
-            return {nullptr};
-        }
+        iterator reverse_order() const;
 
-        iterator begin_preorder(){
-            if (nullptr == root){
-                throw invalid_argument("This Tree is Empty");
-            }
-            clear();
-            scan_preorder(root);
-            set_traversal();
-            return {root};
-        }
+        iterator begin_preorder();
 
-        iterator end_preorder() const{
-            if (nullptr == root){
-                throw invalid_argument("This Tree is Empty");
-            }
-            return {nullptr};
-        }
+        iterator end_preorder() const;
 
         // Iterator
-        iterator begin() {
-            if (nullptr == root){
-                throw invalid_argument("This Tree is Empty");
-            }
-            return begin_level_order();
-        }
+        iterator begin();
 
-        iterator end() const{
-            if (nullptr == root){
-                throw invalid_argument("This Tree is Empty");
-            }
-            return end_level_order();
-        }
+        iterator end() const;
     };
 }
 
