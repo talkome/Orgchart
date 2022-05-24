@@ -143,7 +143,7 @@ namespace ariel {
                 Node* curr = stack.front();
                 traversal.push_back(curr);
                 stack.pop_front();
-                for (int i = curr->sons.size()+1; i > 1; i--) {
+                for (size_t i = curr->sons.size()+1; i > 1; i--) {
                     stack.push_back(curr->sons[i-2]);
                 }
             }
@@ -159,9 +159,9 @@ namespace ariel {
         // Print Operator
         friend ostream& operator<<(ostream &out, OrgChart &oc){
             for (const auto& element : oc) {
-                cout << element << " " ;
+                out << element << " " ;
             }
-            return cout;
+            return out;
         }
 
         void clear() {
