@@ -8,6 +8,12 @@ using namespace std;
 using namespace ariel;
 
 // addition
+
+/**
+ *
+ * @param item
+ * @return
+ */
 OrgChart& OrgChart::add_root(string const &item){
     Node *new_head = nullptr;
     if (item.empty()){
@@ -25,6 +31,12 @@ OrgChart& OrgChart::add_root(string const &item){
     return *this;
 }
 
+/**
+ *
+ * @param boss_name
+ * @param sub_name
+ * @return
+ */
 OrgChart& OrgChart::add_sub(string const &boss_name, string const &sub_name){
     if (boss_name.empty() || sub_name.empty()){
         throw invalid_argument("Invalid Name");
@@ -41,6 +53,12 @@ OrgChart& OrgChart::add_sub(string const &boss_name, string const &sub_name){
 }
 
 // searching using bfs algorithm
+
+/**
+ *
+ * @param item
+ * @return
+ */
 Node* OrgChart::find_node(string const &item) const{
     deque<Node*> queue;
     Node* curr = nullptr;
@@ -59,6 +77,9 @@ Node* OrgChart::find_node(string const &item) const{
     throw invalid_argument("this item is not in the graph");
 }
 
+/**
+ *
+ */
 void OrgChart::set_traversal() {
     size_t i = 0;
     size_t size = traversal.size();
@@ -75,6 +96,10 @@ void OrgChart::set_traversal() {
 }
 
 // Tree Scanner
+
+/**
+ *
+ */
 void OrgChart::scan_level_order(){
     deque<Node*> queue;
     Node* curr = nullptr;
@@ -89,6 +114,10 @@ void OrgChart::scan_level_order(){
     }
 }
 
+/**
+ *
+ * @param node
+ */
 void OrgChart::scan_reverse_order(Node* node) {
     deque<Node*> stack;
     Node* curr = nullptr;
@@ -103,6 +132,10 @@ void OrgChart::scan_reverse_order(Node* node) {
     }
 }
 
+/**
+ *
+ * @param node
+ */
 void OrgChart::scan_preorder(Node* node){
     traversal.push_back(node);
     for(auto & son : node->sons){
@@ -111,6 +144,13 @@ void OrgChart::scan_preorder(Node* node){
 }
 
 // Print Operator
+
+/**
+ *
+ * @param out
+ * @param oc
+ * @return
+ */
 std::ostream& ariel::operator<<(std::ostream &out, ariel::OrgChart &oc){
     for (const auto& element : oc) {
         out << element << " " ;
@@ -118,6 +158,9 @@ std::ostream& ariel::operator<<(std::ostream &out, ariel::OrgChart &oc){
     return out;
 }
 
+/**
+ *
+ */
 void OrgChart::clear() {
     this->root = orig_root;
     if (!traversal.empty()){
@@ -129,6 +172,11 @@ void OrgChart::clear() {
 }
 
 // Method
+
+/**
+ *
+ * @return
+ */
 OrgChart::iterator OrgChart::begin_level_order() {
     if (nullptr == root){
         throw invalid_argument("This Tree is Empty");
@@ -139,6 +187,10 @@ OrgChart::iterator OrgChart::begin_level_order() {
     return {root};
 }
 
+/**
+ *
+ * @return
+ */
 OrgChart::iterator OrgChart::end_level_order() const{
     if (nullptr == root){
         throw invalid_argument("This Tree is Empty");
@@ -146,6 +198,10 @@ OrgChart::iterator OrgChart::end_level_order() const{
     return {nullptr};
 }
 
+/**
+ *
+ * @return
+ */
 OrgChart::iterator OrgChart::begin_reverse_order() {
     if (nullptr == root){
         throw invalid_argument("This Tree is Empty");
@@ -157,6 +213,10 @@ OrgChart::iterator OrgChart::begin_reverse_order() {
     return {root};
 }
 
+/**
+ *
+ * @return
+ */
 OrgChart::iterator OrgChart::reverse_order() const{
     if (nullptr == root){
         throw invalid_argument("This Tree is Empty");
@@ -164,6 +224,10 @@ OrgChart::iterator OrgChart::reverse_order() const{
     return {nullptr};
 }
 
+/**
+ *
+ * @return
+ */
 OrgChart::iterator OrgChart::begin_preorder(){
     if (nullptr == root){
         throw invalid_argument("This Tree is Empty");
@@ -174,6 +238,10 @@ OrgChart::iterator OrgChart::begin_preorder(){
     return {root};
 }
 
+/**
+ *
+ * @return
+ */
 OrgChart::iterator OrgChart::end_preorder() const{
     if (nullptr == root){
         throw invalid_argument("This Tree is Empty");
@@ -182,6 +250,11 @@ OrgChart::iterator OrgChart::end_preorder() const{
 }
 
 // Iterator
+
+/**
+ *
+ * @return
+ */
 OrgChart::iterator OrgChart::begin() {
     if (nullptr == root){
         throw invalid_argument("This Tree is Empty");
@@ -189,6 +262,10 @@ OrgChart::iterator OrgChart::begin() {
     return begin_level_order();
 }
 
+/**
+ *
+ * @return
+ */
 OrgChart::iterator OrgChart::end() const{
     if (nullptr == root){
         throw invalid_argument("This Tree is Empty");
