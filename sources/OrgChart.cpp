@@ -10,8 +10,8 @@ using namespace ariel;
 // addition
 
 /**
- *
- * @param item
+ * set the root of the orgchart
+ * @param item - name of the root
  * @return
  */
 OrgChart& OrgChart::add_root(string const &item){
@@ -22,9 +22,11 @@ OrgChart& OrgChart::add_root(string const &item){
     if (!traversal.empty()){
         clear();
     }
+    // if there is not root  - add one
     if (nullptr == root) {
         this->root = new Node(item);
     } else {
+        // update to the new root
         this->root->name = item;
     }
     this->orig_root = root;
@@ -32,9 +34,9 @@ OrgChart& OrgChart::add_root(string const &item){
 }
 
 /**
- *
- * @param boss_name
- * @param sub_name
+ * add work above the root
+ * @param boss_name - name of the boss
+ * @param sub_name - name of the boss worker
  * @return
  */
 OrgChart& OrgChart::add_sub(string const &boss_name, string const &sub_name){
@@ -46,7 +48,9 @@ OrgChart& OrgChart::add_sub(string const &boss_name, string const &sub_name){
     }
     Node* boss = nullptr;
     Node *sub = nullptr;
+    // check for the worker
     boss = find_node(boss_name);
+    // add it
     sub = new Node(sub_name);
     boss->sons.push_back(sub);
     return *this;
@@ -55,7 +59,7 @@ OrgChart& OrgChart::add_sub(string const &boss_name, string const &sub_name){
 // searching using bfs algorithm
 
 /**
- *
+ * searching the worker using bfs search
  * @param item
  * @return
  */
@@ -78,7 +82,7 @@ Node* OrgChart::find_node(string const &item) const{
 }
 
 /**
- *
+ * convert the vector result into a list
  */
 void OrgChart::set_traversal() {
     size_t i = 0;
@@ -98,7 +102,7 @@ void OrgChart::set_traversal() {
 // Tree Scanner
 
 /**
- *
+ * scan level order
  */
 void OrgChart::scan_level_order(){
     deque<Node*> queue;
@@ -115,8 +119,8 @@ void OrgChart::scan_level_order(){
 }
 
 /**
- *
- * @param node
+ * scan reverse order
+ * @param node - root
  */
 void OrgChart::scan_reverse_order(Node* node) {
     deque<Node*> stack;
@@ -133,8 +137,8 @@ void OrgChart::scan_reverse_order(Node* node) {
 }
 
 /**
- *
- * @param node
+ * scan preorder
+ * @param node - root
  */
 void OrgChart::scan_preorder(Node* node){
     traversal.push_back(node);
@@ -146,20 +150,38 @@ void OrgChart::scan_preorder(Node* node){
 // Print Operator
 
 /**
- *
- * @param out
- * @param oc
+ * print orgchart unique way
+ * @param out - result
+ * @param oc - our orgchart
  * @return
  */
 std::ostream& ariel::operator<<(std::ostream &out, ariel::OrgChart &oc){
-    for (const auto& element : oc) {
-        out << element << " " ;
+    if (nullptr == oc.root){
+        throw invalid_argument("This Tree is Empty");
+    }
+    oc.clear();
+    deque<Node*> queue;
+    Node* curr = nullptr;
+    queue.push_front(oc.root);
+    out << "root: "<< oc.root->name << endl;
+    while(!queue.empty()){
+        curr = queue.front();
+        int i = 1;
+        if (!curr->sons.empty()){
+            out << "child of " << curr->name << endl;
+            for (auto &son: curr->sons) {
+                out <<" "<< i << ": "<< son->name << endl;
+                i++;
+                queue.push_back(son);
+            }
+        }
+        queue.pop_front();
     }
     return out;
 }
 
 /**
- *
+ * clear the last iteration results
  */
 void OrgChart::clear() {
     this->root = orig_root;
@@ -174,7 +196,7 @@ void OrgChart::clear() {
 // Method
 
 /**
- *
+ * iterator to the begin of the orgchart
  * @return
  */
 OrgChart::iterator OrgChart::begin_level_order() {
@@ -188,7 +210,7 @@ OrgChart::iterator OrgChart::begin_level_order() {
 }
 
 /**
- *
+ * iterator to the end of the orgchart
  * @return
  */
 OrgChart::iterator OrgChart::end_level_order() const{
@@ -199,7 +221,7 @@ OrgChart::iterator OrgChart::end_level_order() const{
 }
 
 /**
- *
+ * iterator to the begin of the orgchart
  * @return
  */
 OrgChart::iterator OrgChart::begin_reverse_order() {
@@ -214,7 +236,7 @@ OrgChart::iterator OrgChart::begin_reverse_order() {
 }
 
 /**
- *
+ * iterator to the end of the orgchart
  * @return
  */
 OrgChart::iterator OrgChart::reverse_order() const{
@@ -225,7 +247,7 @@ OrgChart::iterator OrgChart::reverse_order() const{
 }
 
 /**
- *
+ * iterator to the begin of the orgchart
  * @return
  */
 OrgChart::iterator OrgChart::begin_preorder(){
@@ -239,7 +261,7 @@ OrgChart::iterator OrgChart::begin_preorder(){
 }
 
 /**
- *
+ * iterator to the end of the orgchart
  * @return
  */
 OrgChart::iterator OrgChart::end_preorder() const{
@@ -252,7 +274,7 @@ OrgChart::iterator OrgChart::end_preorder() const{
 // Iterator
 
 /**
- *
+ * iterator to the begin of the orgchart
  * @return
  */
 OrgChart::iterator OrgChart::begin() {
@@ -263,7 +285,7 @@ OrgChart::iterator OrgChart::begin() {
 }
 
 /**
- *
+ * iterator to the end of the orgchart
  * @return
  */
 OrgChart::iterator OrgChart::end() const{

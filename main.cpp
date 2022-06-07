@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <set>
+#include <random>
 #include <sstream>
 #include <stdexcept>
 using namespace std;
@@ -15,42 +17,46 @@ using namespace std;
 using namespace ariel;
 
 int main() {
-  OrgChart organization;
-  organization.add_root("CEO")
-      .add_sub("CEO", "CTO")         // Now the CTO is subordinate to the CEO
-      .add_sub("CEO", "CFO")         // Now the CFO is subordinate to the CEO
-      .add_sub("CEO", "COO")         // Now the COO is subordinate to the CEO
-      .add_sub("CTO", "VP_SW") // Now the VP Software is subordinate to the CTO
-      .add_sub("COO", "VP_BI");      // Now the VP_BI is subordinate to the COO
+    vector<string> workers = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"};
+    set<unsigned long> values_t;
+    unsigned long index;
+    while (values_t.size() < 7) {
+        index = (unsigned long) rand() % workers.size();
+        values_t.insert(index);
+    }
+    vector<unsigned long> values(values_t.begin(), values_t.end());
+    shuffle(values.begin(), values.end(), std::mt19937(std::random_device()()));
 
-  cout << organization << endl; /* Prints the org chart in a reasonable format. For example:
-       CEO
-       |--------|--------|
-       CTO      CFO      COO
-       |                 |
-       VP_SW             VP_BI
- */
+  OrgChart oc1;
+  oc1.add_root(workers[values[0]])
+      .add_sub(workers[values[0]], workers[values[1]])
+      .add_sub(workers[values[0]], workers[values[2]])
+      .add_sub(workers[values[0]], workers[values[3]])
+      .add_sub(workers[values[1]], workers[values[4]])
+      .add_sub(workers[values[1]], workers[values[6]])
+      .add_sub(workers[values[3]], workers[values[5]]);
 
-  for (auto it = organization.begin_level_order(); it != organization.end_level_order(); ++it)
-  {
+  cout << oc1 << endl;
+
+  cout <<  "Scan level order:" << endl;
+  for (auto it = oc1.begin_level_order(); it != oc1.end_level_order(); ++it){
     cout << (*it) << " " ;
-  } // prints: CEO CTO CFO COO VP_SW VP_BI
-  for (auto it = organization.begin_reverse_order(); it != organization.reverse_order(); ++it)
-  {
-    cout << (*it) << " " ;
-  } // prints: VP_SW VP_BI CTO CFO COO CEO
-  for (auto it=organization.begin_preorder(); it!=organization.end_preorder(); ++it) {
-    cout << (*it) << " " ;
-  }  // prints: CEO CTO VP_SW CFO COO VP_BI
+  }
 
-  for (auto element : organization)
-  { // this should work like level order
-    cout << element << " " ;
-  } // prints: CEO CTO CFO COO VP_SW VP_BI
+  cout << endl <<  "------ stop -------" << endl;
 
-  // demonstrate the arrow operator:
-  for (auto it = organization.begin_level_order(); it != organization.end_level_order(); ++it)
-  {
-    cout << it->size() << " " ;
-  } // prints: 3 3 3 3 5 5
+  cout <<  "Scan reverse order:" << endl;
+  for (auto it = oc1.begin_reverse_order(); it != oc1.reverse_order(); ++it){
+    cout << (*it) << " " ;
+  }
+
+  cout << endl << "------ stop -------" << endl;
+
+  cout <<  "Scan preorder:" << endl;
+  for (auto it=oc1.begin_preorder(); it != oc1.end_preorder(); ++it) {
+    cout << (*it) << " " ;
+  }
+
+  cout << endl <<  "------ stop -------" << endl;
+
 }
