@@ -3,11 +3,9 @@
  */
 
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include <vector>
 #include <string>
+#include <queue>
 #include <deque>
 #include <algorithm>
 #include <iterator>
@@ -17,116 +15,76 @@ using namespace std;
 
 namespace ariel {
 
+    enum Level {
+        LEVEL_ORDER,
+        REV_ORDER,
+        PREORDER,
+        NONE
+    };
+
     class OrgChart {
 
-    public:
-
         class iterator {
-        private:
-            Node* node;
-
         public:
+            Node* root;
+            deque<Node*> tree_traversal;
+
             // Constructor
-            iterator(Node *ptr): node(ptr) {}
+            iterator(Node* node): root(node) {}
+
+            // Tree Scanner
+//            void scan_level_order(Node*);
+//            void scan_reverse_order(Node*);
+//            void scan_preorder(Node*);
 
             // Operators
-            string& operator*() const{
-                return this->node->name;
-            }
-
-            bool operator==(const iterator& other) const{
-                return this->node == other.node;
-            }
-
-            bool operator!=(const iterator& other) const{
-                return !(*this==other);
-            }
-
-            iterator& operator++(){
-                this->node = this->node->next;
-                return *this;
-            }
-
-            iterator operator++(int){
-                iterator curr = *this;
-                ++(*this);
-                return curr;
-            }
-
-            string* operator->() const{
-                return &(this->node->name);
-            }
+            string& operator*() const;
+            bool operator==(const iterator&) const;
+            bool operator!=(const iterator&) const;
+            iterator& operator++();
+            ariel::OrgChart::iterator operator++(int);
+            string * operator->() const;
         };
 
+    public:
         Node* root;
-        Node* orig_root;
-        vector<Node*> traversal;
 
         // Constructor
-        OrgChart(): root(nullptr), orig_root(nullptr){}
-
-        OrgChart(OrgChart& other): root(other.root), orig_root(other.root){}
-
-        OrgChart(OrgChart&& other) noexcept: root(other.root), orig_root(other.root){}
+        OrgChart(){
+            this->root = nullptr;
+        }
 
         // Destructor
         ~OrgChart()= default;
 
-        OrgChart& operator=(OrgChart other){
-            if (this != &other){
-                this->root = other.root;
-                this->orig_root = other.orig_root;
-            }
-            return *this;
-        }
-
-        OrgChart& operator=(OrgChart&& other) noexcept{
-            if (this != &other){
-                this->root = other.root;
-                this->orig_root = other.orig_root;
-            }
-            return *this;
-        }
-
         // addition
-        OrgChart& add_root(string const &item);
-
-        OrgChart& add_sub(string const &boss_name, string const &sub_name);
+        OrgChart& add_root(string const &);
+        OrgChart& add_sub(string const &, string const &);
 
         // searching using bfs algorithm
-        Node* find_node(string const &item) const;
-
-        void set_traversal();
-
-        // Tree Scanner
-        void scan_level_order();
-
-        void scan_reverse_order(Node* node);
-
-        void scan_preorder(Node* node);
+        Node* find_node(string const &) const;
 
         // Print Operator
-        friend std::ostream& operator<<(std::ostream& out, OrgChart& oc);
-
-        void clear();
+        friend ostream& operator<<(ostream &out, OrgChart &oc);
 
         // Method
-        iterator begin_level_order();
+        iterator begin_level_order() const;
+        iterator end_level_order();
 
-        iterator end_level_order() const;
+        iterator begin_reverse_order() const;
+        iterator reverse_order();
 
-        iterator begin_reverse_order();
-
-        iterator reverse_order() const;
-
-        iterator begin_preorder();
-
-        iterator end_preorder() const;
+        iterator begin_preorder() const;
+        iterator end_preorder();
 
         // Iterator
-        iterator begin();
+        iterator begin() const{
+            return root;
+        }
 
-        iterator end() const;
+        iterator end(){
+            return nullptr;
+        }
     };
 }
 
